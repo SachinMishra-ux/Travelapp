@@ -3,7 +3,7 @@ import datetime
 import pandas as pd
 import sqlite3
 
-st.title('_TravellerApp_:blue[colors] and emojis :sunglasses:')
+st.title(':blue[_TravellerApp_] :sunglasses:')
 d = st.date_input(
     "Date of Travel",
     datetime.date(2019, 7, 6))
