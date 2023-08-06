@@ -39,33 +39,21 @@ if number_of_travellers:
     st.write('--------')
     st.markdown(":black[Who has to pay how much! 💰💸]")
     st.write(df2)
+    
 
-    if st.button('Save this Data'):
-        conn = sqlite3.connect('travellers.db')
-        # Create a cursor object to execute SQL commands
-        c = conn.cursor()
+    # Merge the two DataFrames
+    result_df = pd.concat([df, df2], ignore_index=True)
+
+    def convert_df(df):
+    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+        return df.to_csv().encode('utf-8')
+
+    csv = convert_df(result_df)
+
+    st.download_button(
+        label="Download data as CSV",
+        data=csv,
+        file_name='data_df.csv',
+        mime='text/csv',
+    )
         
-        # Create a table
-        create_table_query = '''
-        CREATE TABLE IF NOT EXISTS travellers_data (
-            id INTEGER PRIMARY KEY,
-            number_of_travellers INTEGER,
-            amount_per_person FLOAT
-        )
-        '''
-        c.execute(create_table_query)
-
-        # Insert the data into the database
-        c.execute('INSERT INTO travellers_data (number_of_travellers,amount_per_person) VALUES (?,?)', (number_of_travellers,amount_per_person))
-        
-        #df.to_sql('travellers_data', conn, if_exists='replace', index=False)
-        #df2.to_sql('travellers_data', conn, if_exists='replace', index=False)
-        # Commit the transaction (save the changes to the database)
-        conn.commit()
-
-        # Close the connection
-        conn.close()
-        st.success('Data Saved!')
-        st.balloons()
-    else:
-        pass
